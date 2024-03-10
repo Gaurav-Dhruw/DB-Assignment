@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model product {
+  id Int @id
+  name String @db.VarChar()
+  desc String @db.Text()
+  SKU String @db.VarChar()
+  price Decimal
+  created_at DateTime @default(now()) @db.Timestamp()
+  modified_at DateTime @updatedAt() @db.Timestamp()
+  deleted_at DateTime @db.Timestamp()
+
+  caterogy product_category @relation(fields: [category_id], references: [id])
+  category_id Int
+
+  inventory product_inventory @relation(fields: [inventory_id], references: [id])
+  inventory_id Int @unique
+
+  discount discount @relation(fields: [discount_id], references: [id])
+  discount_id Int
+}
+
+
+
+model product_category {
+  id Int @id
+  name String @db.VarChar()
+  desc String @db.Text()
+  created_at DateTime @default(now()) @db.Timestamp()
+  modified_at DateTime @updatedAt() @db.Timestamp()
+  deleted_at DateTime @db.Timestamp()
+
+  products product[]
+}
+
+model product_inventory {
+  id Int @id
+  quantity Int
+  created_at DateTime @default(now()) @db.Timestamp()
+  modified_at DateTime @updatedAt() @db.Timestamp()
+  deleted_at DateTime @db.Timestamp()
+
+  product product?
+}
+
+model discount {
+  id Int @id
+  name String @db.VarChar()
+  desc String @db.Text()
+  discount_percent Decimal
+  active Boolean
+  created_at DateTime @default(now()) @db.Timestamp()
+  modified_at DateTime @updatedAt() @db.Timestamp()
+  deleted_at DateTime @db.Timestamp()
+
+  products product[]
+}
