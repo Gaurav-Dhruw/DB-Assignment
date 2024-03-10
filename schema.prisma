@@ -24,7 +24,7 @@ model product {
   modified_at DateTime @updatedAt() @db.Timestamp()
   deleted_at DateTime @db.Timestamp()
 
-  caterogy product_category @relation(fields: [category_id], references: [id])
+  category product_category @relation(fields: [category_id], references: [id])
   category_id Int
 
   inventory product_inventory @relation(fields: [inventory_id], references: [id])
